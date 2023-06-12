@@ -1,0 +1,115 @@
+<!--
+This scene is identical to the previous one, except the actuators are 
+swapped from direct torque actuation, to position-controlled actuators
+where the output force is proportional to the error between the desired
+and actual joint-space position (proportional control).
+
+For more information on the actuator model used in MuJoCo see:
+https://mujoco.readthedocs.io/en/latest/modeling.html#actuator-shortcuts
+https://mujoco.readthedocs.io/en/latest/XMLreference.html#actuator-position
+
+Things to note:
+  - What happens when you play with shoulder's control? What if you then
+    leave it at a constant value?
+    
+Things to try:
+  - Adjust the default damping value in the joints. Try different values,
+    including negative ones.
+    
+  - Try to reach the transparent sphere in the scene with the tip of the
+    forearm. What strategy are you using, and what order do you perform
+    actions? You can use multiple different approaches to get to the same
+    state. This is an example of trajectory redundancy.
+    
+  - Adjust the stiffness parameter "kp" in the actuators.
+    
+  - Uncomment the velocity actuators below. What is the connection between
+    damping and velocity actuation?
+    
+Tip: You can use the "Reload" button on the left sidebar of the simulation
+scene to apply changes you saved in the currently loaded XML.
+
+-->
+
+<mujoco model="2-link arm position control">
+  <option timestep="0.005" iterations="50" solver="Newton" tolerance="1e-10" />
+  <compiler autolimits="true"/>
+  
+  <default>
+  <!-- Adjust damping here -->
+    <joint type="hinge" pos="0 0 0" axis="0 0 1" limited="true" range="-5 160" damping="2"/>
+    <geom rgba="0.3 0.8 0.8 1"/>
+  </default>
+
+  <worldbody> 
+    <body name="parent" pos="0 0 0" euler="0 0 90">
+    
+      <geom name="upper arm" mass="1" type="capsule" size="0.045" fromto="0 0 0  0.25 0 0" />
+      <body name="child" pos="0.25 0 0">
+        <geom name="forearm" mass="0.8" type="capsule" size="0.035" fromto="0 0 0  0.25 0 0"/>
+        
+        <!-- A visual representation of the hand. Notice there is no joint child, so it is rigidly attached to the forearm -->
+        <body  name="rwrist" pos="0.25 0 0" euler="-90 0 90">
+          
+          <geom density="1000" type="capsule" size="0.02000001 0.03" pos="1.880135E-09 -0.03 -3.279598E-08" quat="4.003268E-08 -4.391836E-08 -0.7071071 -0.7071071" priority="0" contype="0" conaffinity="0" group="2" condim="1" solmix="1" solref="0.015 1"  solimp="0.99 0.99 0.003" margin="0" gap="0" friction="0.7 0.005 0.0001" name="rwrist" />
+          <body pos="-9.784539E-09 -0.09076759 3.994287E-08" quat="-1 0 0 0" name="rhand">
+          <joint name="wrist" axis="1 0 0" damping="0.01" pos ="0 0.03 0"/>
+            <geom density="1000" type="ellipsoid" size="0.03500002 0.02000001 0.045" pos="3.469804E-09 -0.01675202 -3.877605E-08" quat="4.003268E-08 -4.391836E-08 -0.7071071 -0.7071071" priority="0" contype="0" conaffinity="0" group="2"  condim="3" solmix="1" solref="0.015 1" solimp="0.98 0.98 0.001" margin="0" gap="0" friction="1 0.005 0.0001" name="rhand" />
+            <body pos="-6.475558E-09 -0.06500006 1.90359E-08" quat="-1 0 0 0" name="rfingers">
+              <geom density="1000" type="capsule" size="0.006500002 0.04" pos="-0.02399999 -0.02500005 -4.555073E-08" quat="0.7071071 -0.7071071 4.391836E-08 4.003268E-08" priority="0" contype="1" conaffinity="1" group="2" condim="3"  solmix="1" solref="0.015 1" solimp="0.98 0.98 0.001" margin="0" gap="0" friction="1 0.005 0.0001" name="rfinger0" />
+              <geom density="1000" type="capsule" size="0.006500002 0.04" pos="-0.00799998 -0.02999995 -3.565628E-10" quat="0.7071071 -0.7071071 4.391836E-08 4.003268E-08" priority="0" contype="1" conaffinity="1" group="2" condim="3"  solmix="1" solref="0.015 1" solimp="0.98 0.98 0.001" margin="0" gap="0" friction="1 0.005 0.0001" name="rfinger1" />
+              <geom density="1000" type="capsule" size="0.006000001 0.04" pos="0.007999999 -0.03000007 -5.897357E-09" quat="0.7071071 -0.7071071 4.391836E-08 4.003268E-08" priority="0" contype="1" conaffinity="1" group="2" condim="3"  solmix="1" solref="0.015 1" solimp="0.98 0.98 0.001" margin="0" gap="0" friction="1 0.005 0.0001" name="rfinger2" />
+              <geom density="1000" type="capsule" size="0.005500001 0.04" pos="0.02400001 -0.02500007 3.095344E-08" quat="0.7071071 -0.7071071 4.391836E-08 4.003268E-08" priority="0" contype="1" conaffinity="1" group="2" condim="3"  solmix="1" solref="0.015 1" solimp="0.98 0.98 0.001" margin="0" gap="0" friction="1 0.005 0.0001" name="rfinger3" />
+              <body name="tip" pos="-0.048 0 0">
+
+              </body>
+            </body>
+            <body pos="-0.025 6.70552E-09 -8.940694E-09" quat="0.92388 -4.930634E-08 6.000214E-08 -0.382683" name="rthumb">
+              <geom density="1000" type="capsule" size="0.008000004 0.03" pos="2.888915E-08 -0.03000006 -2.920286E-08" quat="3.642271E-08 6.018672E-09 -0.707107 -0.707107" priority="0" contype="0" conaffinity="0" group="2"   condim="3" solmix="1" solref="0.015 1" solimp="0.98 0.98 0.001" margin="0" gap="0" friction="1 0.005 0.0001" name="rthumb" />
+            </body>
+          </body>
+        </body>
+
+      </body>
+    </body>
+    
+    
+
+    <geom name="floor" pos="0 0 -1.35" size="0 0 1" type="plane" material="matplane" rgba="0.5 0.5 0.5 1"/>
+    <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
+    
+    <body name="pass_body" pos="2 0.7 -1.35">
+      <geom density="5000" type="cylinder" fromto="0 0 0 0 0 2" size="0.02" rgba=".8 .2 .2 1"/>
+      <joint type="slide" axis="1 0 0" limited="true" range="-4 0"/>
+    </body>
+  </worldbody>
+  
+  <!-- 
+  Actuators apply joint-space forces at specified degrees of freedom. The position 
+  name is a shortcut that sets up a feedback controller. The control specifies target
+  angles in radian.
+  
+  The velocity actuators apply force based on the error between current and target
+  joint angle velocity.
+  -->
+  <actuator>
+    <position kp="0.01" name="wrist_p" joint="wrist" ctrllimited="true" ctrlrange="-1.25664 1.25664"/>
+    
+    <!-- 
+    <velocity kv="10" name="shoulder_v" joint="elbow" ctrllimited="true" ctrlrange="-3 3"/>
+    <velocity kv="10" name="elbow_v" joint="elbow" ctrllimited="true" ctrlrange="-3 3"/>
+    -->
+  </actuator>
+
+  <include file="cmu_model.xml"/>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.6 0.6 0.6" rgb2="0 0 0" width="512" height="512"/>
+    <texture name="texplane" type="2d" builtin="checker" rgb1=".25 .25 .25" rgb2=".3 .3 .3" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
+    <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true"/>
+  </asset>
+
+  <visual>
+    <rgba haze=".3 .3 .3 1"/>
+  </visual>
+</mujoco>
