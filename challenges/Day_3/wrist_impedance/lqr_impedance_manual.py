@@ -17,8 +17,6 @@ dxf = None
 
 
 
-# The arm_control function is called on every frame of the simulation.
-# It is the only function you need to edit
 def lqr_control(model, data, K, ctrl0, qpos0):
     global dxf
     global armband
