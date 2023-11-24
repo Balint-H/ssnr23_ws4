@@ -3,7 +3,6 @@ This example scene
 -->
 
 <mujoco model="test">
-    <compiler coordinate="global"/>
 
     <default>
         <geom rgba=".9 .7 .1 1" size="0.01"/>

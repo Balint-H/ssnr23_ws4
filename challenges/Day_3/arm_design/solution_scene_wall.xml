@@ -1,5 +1,5 @@
 <mujoco model="left_hand scene">
-  <option noslip_iterations="3" />
+  <option noslip_iterations="3"/>
   <include file="solution_wall.xml"/>
 
   <size nuserdata="12"/>
